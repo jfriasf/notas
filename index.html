@@ -121,7 +121,7 @@
 
   @media (max-width: 640px) {
     #search { margin-left: 0; flex: 1; }
-    #board { padding-top: 130px; }
+    
   }
 </style>
 </head>
@@ -157,6 +157,7 @@ function save() {
   localStorage.setItem(KEY, JSON.stringify(notes));
   updateCount();
 }
+function headerH() { return document.querySelector('header').offsetHeight + 10; }
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
 function fmt(ts) {
   return new Date(ts).toLocaleString('es', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
@@ -184,7 +185,7 @@ function addNote(x, y) {
     text: '',
     color: selectedColor,
     x: x ?? Math.max(10, Math.random() * (w - 260)),
-    y: y ?? Math.max(80, 80 + Math.random() * (h - 320)),
+    y: Math.max(headerH(), y ?? headerH() + Math.random() * Math.max(0, h - headerH() - 240)),
     rot: (Math.random() * 6 - 3).toFixed(1),
     z: ++topZ,
     pinned: false,
@@ -265,7 +266,7 @@ function makeDraggable(el, note) {
     const startX = e.clientX - note.x, startY = e.clientY - note.y;
     const move = ev => {
       note.x = Math.min(Math.max(0, ev.clientX - startX), window.innerWidth - 60);
-      note.y = Math.min(Math.max(60, ev.clientY - startY), window.innerHeight - 40);
+      note.y = Math.min(Math.max(headerH(), ev.clientY - startY), window.innerHeight - 40);
       el.style.left = note.x + 'px';
       el.style.top = note.y + 'px';
     };
